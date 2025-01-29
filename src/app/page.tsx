@@ -10,7 +10,14 @@ interface Puzzle {
       type: number;
     }[]
     clueLists: unknown;
-    clues: unknown;
+    clues: {
+      cells: number[];
+      direction: string;
+      label: string;
+      text: {
+        plain: string;
+      }[];
+    }[];
     dimensions: {
       height: number;
       width: number;
@@ -42,13 +49,34 @@ export default function Home() {
               <div className={`border border-gray-500 ${puzzle.body[0].cells[(i * 15) + j].answer ? 'bg-white' : 'bg-black'} aspect-square w-auto h-auto`} key={`${i}-${j}`}>
                 {puzzle.body[0].cells[(i * 15) + j].answer &&
                   <div className="text-[1.2vh] text-black select-none">
-                  {puzzle.body[0].cells[(i * 15) + j].label}
-                </div>
+                    {puzzle.body[0].cells[(i * 15) + j].label}
+                  </div>
                 }
               </div>
             ))}
           </div>
         ))}
+      </div>
+      <div className="flex flex-row h-2/3 w-fit justify-end">
+        {['Across', 'Down'].map((direction) => {
+          return (
+            <div key={direction} className="flex flex-col max-w-[15vw]">
+              <div className="p-4">
+                <div className="text-xl font-bold">{direction}</div>
+              </div>
+              <ol className="p-4 overflow-scroll">
+                {puzzle.body[0].clues.map((clue, i) => {
+                  if (clue.direction != direction) return;
+                  return (
+                    <li key={i} className="text-sm font-white">
+                      {clue.label}. {clue.text[0].plain}
+                    </li>
+                  );
+                })}
+              </ol>
+            </div>
+          )
+        })}
       </div>
     </div>
   );
