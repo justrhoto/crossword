@@ -34,14 +34,16 @@ export default function Home() {
 
 
   return (
-    <div className={`grid grid-rows-${puzzle.body[0].dimensions.width} items-center`}>
-      {Array.from({ length: puzzle.body[0].dimensions.height }).map((_, i) => (
-        <div key={i} className="grid grid-cols-15 gap-0">
-          {Array.from({ length: puzzle.body[0].dimensions.width }).map((_, j) => (
-            <div className="border border-gray-500 w-6 h-6" key={`${i}-${j}`}>X</div>
-          ))}
-        </div>
-      ))}
+    <div className="flex justify-center items-center h-screen">
+      <div className={`grid grid-rows-${puzzle.body[0].dimensions.width}`}>
+        {Array.from({ length: puzzle.body[0].dimensions.height }).map((_, i) => (
+          <div key={i} className="grid grid-cols-15">
+            {Array.from({ length: puzzle.body[0].dimensions.width }).map((_, j) => (
+              <div className={`border border-gray-500 bg-${puzzle.body[0].cells[(i * 15) + j].answer ? 'white' : 'black'} w-6 h-6`} key={`${i}-${j}`}></div>
+            ))}
+          </div>
+        ))}
+      </div>
     </div>
   );
 }
