@@ -35,11 +35,11 @@ export default function Home() {
 
   return (
     <div className="flex justify-center items-center h-screen">
-      <div className={`grid grid-rows-${puzzle.body[0].dimensions.width}`}>
+      <div className={`grid grid-rows-${puzzle.body[0].dimensions.width} h-2/3 aspect-square`}>
         {Array.from({ length: puzzle.body[0].dimensions.height }).map((_, i) => (
           <div key={i} className="grid grid-cols-15">
             {Array.from({ length: puzzle.body[0].dimensions.width }).map((_, j) => (
-              <div className={`border border-gray-500 bg-${puzzle.body[0].cells[(i * 15) + j].answer ? 'white' : 'black'} w-6 h-6`} key={`${i}-${j}`}></div>
+              <div className={`border border-gray-500 bg-${puzzle.body[0].cells[(i * 15) + j].answer ? 'white' : 'black'} aspect-square w-auto h-auto`} key={`${i}-${j}`}></div>
             ))}
           </div>
         ))}
