@@ -40,9 +40,11 @@ export default function Home() {
           <div key={i} className={`grid grid-cols-${puzzle.body[0].dimensions.height}`}>
             {Array.from({ length: puzzle.body[0].dimensions.width }).map((_, j) => (
               <div className={`border border-gray-500 ${puzzle.body[0].cells[(i * 15) + j].answer ? 'bg-white' : 'bg-black'} aspect-square w-auto h-auto`} key={`${i}-${j}`}>
-                <div className="text-[1.2vh] text-black">
+                {puzzle.body[0].cells[(i * 15) + j].answer &&
+                  <div className="text-[1.2vh] text-black select-none">
                   {puzzle.body[0].cells[(i * 15) + j].label}
                 </div>
+                }
               </div>
             ))}
           </div>
