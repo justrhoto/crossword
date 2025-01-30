@@ -99,18 +99,18 @@ export default function Home() {
         ))}
       </div>
       <div className="flex flex-row w-[100vw] lg:pl-9 md:max-w-xl md:max-h-[75vh] justify-end overflow-scroll">
-        {['Across', 'Down'].map((direction) => {
+        {['Across', 'Down'].map((directionIndex) => {
           return (
-            <div key={direction} className="flex flex-col w-[50vw] overflow-scroll grow">
+            <div key={directionIndex} className="flex flex-col w-[50vw] overflow-scroll grow">
               <div className="pl-3 pt-1 pb-1">
-                <div className="text-xl font-bold m-0 p-0">{direction}</div>
+                <div className="text-xl font-bold m-0 p-0">{directionIndex}</div>
               </div>
               <ol className="p-2 overflow-scroll">
                 {puzzle.body[0].clues.map((clue, i) => {
-                  if (clue.direction != direction) return;
+                  if (clue.direction != directionIndex) return;
                   return (
-                    <li key={i} className="hover:bg-gray-800 text-sm font-white">
-                      <button className="pt-1 pb-1 size-full text-left" onClick={() => { setCurrentCell(clue.cells[0]); setDirection(clue.direction); }}>
+                    <li key={i} className={`hover:bg-gray-800 text-sm font-white ${clue.cells.includes(currentCell) && clue.direction === direction && 'bg-gray-900'}`}>
+                      <button className="p-1 size-full text-left" onClick={() => { setCurrentCell(clue.cells[0]); setDirection(clue.direction); }}>
                       {clue.label}. {clue.text[0].plain}
                       </button>
                     </li>
