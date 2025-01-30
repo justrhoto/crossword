@@ -53,8 +53,11 @@ export default function Home() {
                   </div>}
                 {puzzle.body[0].cells[(i * 15) + j].answer &&
                   <div className="absolute inset-0 flex justify-center items-center text-3xl text-black select-none">
-                    {puzzle.body[0].cells[(i * 15) + j].answer}
+                    {/* {puzzle.body[0].cells[(i * 15) + j].answer} */}
                   </div>}
+                {puzzle.body[0].cells[(i * 15) + j].answer &&
+                  <button className="absolute inset-0 z-10" />
+                }
               </div>
             ))}
           </div>
