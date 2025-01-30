@@ -15,7 +15,7 @@ interface Puzzle {
     clueLists: unknown;
     clues: {
       cells: number[];
-      direction: string;
+      direction: 'Across' | 'Down';
       label: string;
       text: {
         plain: string;
@@ -109,8 +109,10 @@ export default function Home() {
                 {puzzle.body[0].clues.map((clue, i) => {
                   if (clue.direction != direction) return;
                   return (
-                    <li key={i} className="pt-1 pb-1 hover:bg-gray-800 text-sm font-white">
+                    <li key={i} className="hover:bg-gray-800 text-sm font-white">
+                      <button className="pt-1 pb-1 size-full text-left" onClick={() => { setCurrentCell(clue.cells[0]); setDirection(clue.direction); }}>
                       {clue.label}. {clue.text[0].plain}
+                      </button>
                     </li>
                   );
                 })}
