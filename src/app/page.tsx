@@ -41,8 +41,8 @@ export default function Home() {
 
 
   return (
-    <div className="flex justify-center items-center h-screen">
-      <div className={`grid grid-rows-${puzzle.body[0].dimensions.width} h-2/3 aspect-square`}>
+    <div className="flex flex-col md:flex-row justify-center items-center h-screen">
+      <div className={`grid grid-rows-${puzzle.body[0].dimensions.width} w-[100vw] md:max-w-3xl aspect-square p-2`}>
         {Array.from({ length: puzzle.body[0].dimensions.height }).map((_, i) => (
           <div key={i} className={`grid grid-cols-${puzzle.body[0].dimensions.height}`}>
             {Array.from({ length: puzzle.body[0].dimensions.width }).map((_, j) => (
@@ -57,14 +57,14 @@ export default function Home() {
           </div>
         ))}
       </div>
-      <div className="flex flex-row h-2/3 w-fit justify-end">
+      <div className="flex flex-row w-[100vw] md:max-w-xl md:max-h-[75vh] justify-end overflow-scroll">
         {['Across', 'Down'].map((direction) => {
           return (
-            <div key={direction} className="flex flex-col max-w-[15vw]">
-              <div className="p-4">
-                <div className="text-xl font-bold">{direction}</div>
+            <div key={direction} className="flex flex-col w-[50vw] overflow-scroll grow">
+              <div className="p-2">
+                <div className="text-xl font-bold m-0 p-0">{direction}</div>
               </div>
-              <ol className="p-4 overflow-scroll">
+              <ol className="p-2 overflow-scroll">
                 {puzzle.body[0].clues.map((clue, i) => {
                   if (clue.direction != direction) return;
                   return (
