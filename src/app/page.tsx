@@ -196,7 +196,7 @@ export default function Home() {
                   {directionIndex}
                 </div>
               </div>
-              <ol className="p-2 overflow-auto">
+              <ol className="p-2 overflow-auto scrollbar-thin scrollbar-thumb-gray-800 scrollbar-track-transparent">
                 {puzzle.body[0].clues.map((clue, i) => {
                   if (clue.direction != directionIndex) return;
                   return (
