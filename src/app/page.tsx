@@ -123,7 +123,7 @@ export default function Home() {
         return;
       }
       advanceCell();
-    } else if (e.key === 'ArrowLeft' && currentCell > 0 && isCellUsable(currentCell - 1)) {
+    } else if (e.key === 'ArrowLeft') {
       if (direction != 'Across') {
         setDirection('Across');
         return;
