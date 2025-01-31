@@ -186,14 +186,14 @@ export default function Home() {
           </div>
         ))}
       </div>
-      <div className="flex flex-row w-[100vw] lg:pl-9 md:max-w-xl md:max-h-[75vh] justify-end overflow-scroll">
+      <div className="flex flex-row w-[100vw] lg:pl-9 md:max-w-xl md:max-h-[75vh] justify-end">
         {['Across', 'Down'].map((directionIndex) => {
           return (
-            <div key={directionIndex} className="flex flex-col w-[50vw] overflow-scroll grow">
+            <div key={directionIndex} className="flex flex-col w-[50vw] grow">
               <div className="pl-3 pt-1 pb-1">
                 <div className="text-xl font-bold m-0 p-0">{directionIndex}</div>
               </div>
-              <ol className="p-2 overflow-scroll">
+              <ol className="p-2 overflow-auto">
                 {puzzle.body[0].clues.map((clue, i) => {
                   if (clue.direction != directionIndex) return;
                   return (
