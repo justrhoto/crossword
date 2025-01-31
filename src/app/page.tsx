@@ -187,7 +187,7 @@ export default function Home() {
           </div>
         ))}
       </div>
-      <div className="flex flex-row w-[100vw] lg:pl-9 md:max-w-xl md:max-h-[75vh] justify-end">
+      <div className="flex flex-row w-[100vw] lg:pl-9 md:max-w-xl md:max-h-[75vh] justify-end overflow-auto">
         {['Across', 'Down'].map((directionIndex) => {
           return (
             <div key={directionIndex} className="flex flex-col w-[50vw] grow">
