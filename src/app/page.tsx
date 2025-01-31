@@ -197,7 +197,7 @@ export default function Home() {
                 {puzzle.body[0].clues.map((clue, i) => {
                   if (clue.direction != directionIndex) return;
                   return (
-                    <li key={i} ref={elementsRef.current[i]} className={`hover:bg-gray-800 text-sm font-white ${clue.cells.includes(currentCell) && clue.direction === direction && 'bg-gray-900'}`}>
+                    <li key={i} ref={elementsRef.current[i]} className={`hover:bg-gray-800 text-sm font-white ${clue.cells.includes(currentCell) && clue.direction === direction ? 'bg-gray-900' : ''}`}>
                       <button className="p-1 size-full text-left" onClick={() => { setCurrentCell(clue.cells[0]); setDirection(clue.direction); }}>
                         {clue.label}. {clue.text[0].plain}
                       </button>
