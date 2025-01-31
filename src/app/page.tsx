@@ -62,12 +62,12 @@ export default function Home() {
       }
     } else {
       let cellIndex = currentCell;
-      while (cellIndex >= dimensions.width && cells[cellIndex - 15].answer) {
-        returnCells.push(cellIndex -= 15);
+      while (cellIndex >= dimensions.width && cells[cellIndex - puzzle.body[0].dimensions.width].answer) {
+        returnCells.push(cellIndex -= puzzle.body[0].dimensions.width);
       }
       cellIndex = currentCell;
-      while (cellIndex < (dimensions.width * dimensions.height) - dimensions.width && cells[cellIndex + 15].answer) {
-        returnCells.push(cellIndex += 15);
+      while (cellIndex < (dimensions.width * dimensions.height) - dimensions.width && cells[cellIndex + puzzle.body[0].dimensions.width].answer) {
+        returnCells.push(cellIndex += puzzle.body[0].dimensions.width);
       }
     }
     setSecondaryCells(returnCells);
@@ -156,27 +156,30 @@ export default function Home() {
     }
   }
 
+  const cellColor = (cellIndex: number) => {
+    if (!puzzle.body[0].cells[cellIndex].answer) return 'bg-black';
+    if (currentCell === cellIndex) return 'bg-yellow-100';
+    if (secondaryCells?.includes(cellIndex)) return 'bg-gray-300';
+    return 'bg-white';
+  }
+
   return (
     <div className="flex flex-col md:flex-row justify-center items-center h-screen" onKeyDown={(e) => handleKeyDown(e)}>
       <div className={`grid grid-rows-${puzzle.body[0].dimensions.width} w-[100vw] md:max-w-3xl aspect-square p-2`}>
         {Array.from({ length: puzzle.body[0].dimensions.height }).map((_, i) => (
           <div key={i} className={`grid grid-cols-${puzzle.body[0].dimensions.height}`}>
             {Array.from({ length: puzzle.body[0].dimensions.width }).map((_, j) => (
-              <div className={`relative border border-gray-500 
-                              ${puzzle.body[0].cells[(i * 15) + j].answer ? 'bg-white' : 'bg-black'} 
-                              ${currentCell === (i * 15 + j) && 'bg-yellow-100'} 
-                              ${secondaryCells?.includes((i * 15) + j) && 'bg-gray-300'}
-                              aspect-square w-auto h-auto`} key={`${(i * 15) + j}`}>
-                {puzzle.body[0].cells[(i * 15) + j].label &&
+              <div className={`relative border border-gray-500 ${cellColor((i * puzzle.body[0].dimensions.width) + j)} aspect-square w-auto h-auto`} key={`${(i * puzzle.body[0].dimensions.width) + j}`}>
+                {puzzle.body[0].cells[(i * puzzle.body[0].dimensions.width) + j].label &&
                   <div className="absolute inset-0 text-xs text-black select-none">
-                    {puzzle.body[0].cells[(i * 15) + j].label}
+                    {puzzle.body[0].cells[(i * puzzle.body[0].dimensions.width) + j].label}
                   </div>}
-                {puzzle.body[0].cells[(i * 15) + j].answer &&
+                {puzzle.body[0].cells[(i * puzzle.body[0].dimensions.width) + j].answer &&
                   <div className="absolute inset-0 flex justify-center items-center text-3xl text-black select-none">
-                    {userAnswers[(i * 15) + j]}
+                    {userAnswers[(i * puzzle.body[0].dimensions.width) + j]}
                   </div>}
-                {puzzle.body[0].cells[(i * 15) + j].answer &&
-                  <button className="absolute inset-0 z-10" onClick={() => handleCellClick(i * 15 + j)} />
+                {puzzle.body[0].cells[(i * puzzle.body[0].dimensions.width) + j].answer &&
+                  <button className="absolute inset-0 z-10" onClick={() => handleCellClick(i * puzzle.body[0].dimensions.width + j)} />
                 }
               </div>
             ))}
