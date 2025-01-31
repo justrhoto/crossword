@@ -44,6 +44,7 @@ export default function Home() {
   const [currentCell, setCurrentCell] = useState(0);
   const [secondaryCells, setSecondaryCells] = useState<number[]>();
   const [direction, setDirection] = useState<'Across' | 'Down'>('Across');
+  const [userAnswers, setUserAnswers] = useState<string[]>(Array.from({ length: puzzle.body[0].cells.length }, () => ''));
 
   useEffect(() => {
     const dimensions = puzzle.body[0].dimensions;
@@ -71,8 +72,89 @@ export default function Home() {
     setSecondaryCells(returnCells);
   }, [currentCell, direction, puzzle.body]);
 
+  const handleCellClick = (cellIndex: number) => {
+    if (currentCell === cellIndex) {
+      setDirection(direction === 'Across' ? 'Down' : 'Across');
+    } else {
+      setCurrentCell(cellIndex);
+    }
+  }
+
+  const isCellUsable = (cellIndex: number) => {
+    return !!puzzle.body[0].cells[cellIndex].answer;
+  }
+
+  const advanceCell = ({ reverse = false }: { reverse?: boolean } = {}) => {
+    if (direction === 'Across') {
+      if (reverse) {
+        if (currentCell % puzzle.body[0].dimensions.width <= 0) return;
+        let nextCell = currentCell - 1;
+        while (!isCellUsable(nextCell) && nextCell % puzzle.body[0].dimensions.width > 0) nextCell--;
+        if (!isCellUsable(nextCell)) return;
+        setCurrentCell(nextCell);
+      } else {
+        if (currentCell % puzzle.body[0].dimensions.width >= puzzle.body[0].dimensions.width - 1) return;
+        let nextCell = currentCell + 1;
+        while (!isCellUsable(nextCell) && nextCell % puzzle.body[0].dimensions.width < puzzle.body[0].dimensions.width - 1) nextCell++;
+        if (!isCellUsable(nextCell)) return;
+        setCurrentCell(nextCell);
+      }
+    } else {
+      if (reverse) {
+        if (currentCell - puzzle.body[0].dimensions.height < 0) return;
+        let nextCell = currentCell - puzzle.body[0].dimensions.height;
+        while (!isCellUsable(nextCell) && nextCell - puzzle.body[0].dimensions.height >= 0) nextCell -= puzzle.body[0].dimensions.height;
+        if (!isCellUsable(nextCell)) return;
+        setCurrentCell(nextCell);
+      } else {
+        if (currentCell + puzzle.body[0].dimensions.height >= puzzle.body[0].cells.length) return;
+        let nextCell = currentCell + puzzle.body[0].dimensions.height;
+        while (!isCellUsable(nextCell) && nextCell + puzzle.body[0].dimensions.height < puzzle.body[0].cells.length) nextCell += puzzle.body[0].dimensions.height;
+        if (!isCellUsable(nextCell)) return;
+        setCurrentCell(nextCell);
+      }
+    }
+  }
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
+    if (e.key === 'ArrowRight') {
+      if (direction != 'Across') {
+        setDirection('Across');
+        return;
+      }
+      advanceCell();
+    } else if (e.key === 'ArrowLeft' && currentCell > 0 && isCellUsable(currentCell - 1)) {
+      if (direction != 'Across') {
+        setDirection('Across');
+        return;
+      }
+      advanceCell({ reverse: true });
+    } else if (e.key === 'ArrowDown') {
+      if (direction != 'Down') {
+        setDirection('Down');
+        return;
+      }
+      advanceCell();
+    } else if (e.key === 'ArrowUp') {
+      if (direction != 'Down') {
+        setDirection('Down');
+        return;
+      }
+      advanceCell({ reverse: true });
+    } else if (e.key === 'Backspace') {
+      setUserAnswers(userAnswers.map((answer, i) => i === currentCell ? '' : answer));
+      advanceCell({ reverse: true });
+    } else if (e.key === 'Enter' || e.key === 'Tab') {
+      e.preventDefault();
+      setDirection(direction === 'Across' ? 'Down' : 'Across');
+    } else if (e.key.length === 1 && e.key.match(/[a-zA-Z]/)) {
+      setUserAnswers(userAnswers.map((answer, i) => i === currentCell ? e.key.toUpperCase() : answer));
+      advanceCell();
+    }
+  }
+
   return (
-    <div className="flex flex-col md:flex-row justify-center items-center h-screen">
+    <div className="flex flex-col md:flex-row justify-center items-center h-screen" onKeyDown={(e) => handleKeyDown(e)}>
       <div className={`grid grid-rows-${puzzle.body[0].dimensions.width} w-[100vw] md:max-w-3xl aspect-square p-2`}>
         {Array.from({ length: puzzle.body[0].dimensions.height }).map((_, i) => (
           <div key={i} className={`grid grid-cols-${puzzle.body[0].dimensions.height}`}>
@@ -88,10 +170,10 @@ export default function Home() {
                   </div>}
                 {puzzle.body[0].cells[(i * 15) + j].answer &&
                   <div className="absolute inset-0 flex justify-center items-center text-3xl text-black select-none">
-                    {/* {puzzle.body[0].cells[(i * 15) + j].answer} */}
+                    {userAnswers[(i * 15) + j]}
                   </div>}
                 {puzzle.body[0].cells[(i * 15) + j].answer &&
-                  <button className="absolute inset-0 z-10" onClick={currentCell === (i * 15 + j) ? () => setDirection(direction === 'Across' ? 'Down' : 'Across') : () => setCurrentCell((i * 15) + j)} />
+                  <button className="absolute inset-0 z-10" onClick={() => handleCellClick(i * 15 + j)} />
                 }
               </div>
             ))}
@@ -111,7 +193,7 @@ export default function Home() {
                   return (
                     <li key={i} className={`hover:bg-gray-800 text-sm font-white ${clue.cells.includes(currentCell) && clue.direction === direction && 'bg-gray-900'}`}>
                       <button className="p-1 size-full text-left" onClick={() => { setCurrentCell(clue.cells[0]); setDirection(clue.direction); }}>
-                      {clue.label}. {clue.text[0].plain}
+                        {clue.label}. {clue.text[0].plain}
                       </button>
                     </li>
                   );
