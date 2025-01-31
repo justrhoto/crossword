@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef, createRef } from 'react';
 import _puzzle from './crossword.json';
 
 interface Puzzle {
@@ -45,6 +45,7 @@ export default function Home() {
   const [secondaryCells, setSecondaryCells] = useState<number[]>();
   const [direction, setDirection] = useState<'Across' | 'Down'>('Across');
   const [userAnswers, setUserAnswers] = useState<string[]>(Array.from({ length: puzzle.body[0].cells.length }, () => ''));
+  const elementsRef = useRef(puzzle.body[0].clues.map(() => createRef<HTMLLIElement>()));
 
   useEffect(() => {
     const dimensions = puzzle.body[0].dimensions;
@@ -70,6 +71,8 @@ export default function Home() {
       }
     }
     setSecondaryCells(returnCells);
+    const currentClue = puzzle.body[0].cells[currentCell].clues[direction === 'Across' ? 0 : 1];
+    elementsRef.current[currentClue].current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
   }, [currentCell, direction, puzzle.body]);
 
   const handleCellClick = (cellIndex: number) => {
@@ -191,7 +194,7 @@ export default function Home() {
                 {puzzle.body[0].clues.map((clue, i) => {
                   if (clue.direction != directionIndex) return;
                   return (
-                    <li key={i} className={`hover:bg-gray-800 text-sm font-white ${clue.cells.includes(currentCell) && clue.direction === direction && 'bg-gray-900'}`}>
+                    <li key={i} ref={elementsRef.current[i]} className={`hover:bg-gray-800 text-sm font-white ${clue.cells.includes(currentCell) && clue.direction === direction && 'bg-gray-900'}`}>
                       <button className="p-1 size-full text-left" onClick={() => { setCurrentCell(clue.cells[0]); setDirection(clue.direction); }}>
                         {clue.label}. {clue.text[0].plain}
                       </button>
