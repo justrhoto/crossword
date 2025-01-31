@@ -46,34 +46,34 @@ export default function Home() {
   const [direction, setDirection] = useState<'Across' | 'Down'>('Across');
   const [userAnswers, setUserAnswers] = useState<string[]>(Array.from({ length: puzzle.body[0].cells.length }, () => ''));
   const elementsRef = useRef(puzzle.body[0].clues.map(() => createRef<HTMLLIElement>()));
+  const { width, height } = puzzle.body[0].dimensions;
 
   useEffect(() => {
-    const dimensions = puzzle.body[0].dimensions;
     const cells = puzzle.body[0].cells;
     const returnCells = [];
     if (direction === 'Across') {
       let cellIndex = currentCell;
-      while (cellIndex % dimensions.width != 0 && cells[cellIndex - 1].answer) {
+      while (cellIndex % width != 0 && cells[cellIndex - 1].answer) {
         returnCells.push(--cellIndex);
       }
       cellIndex = currentCell;
-      while ((cellIndex + 1) % dimensions.width != 0 && cells[cellIndex + 1].answer) {
+      while ((cellIndex + 1) % width != 0 && cells[cellIndex + 1].answer) {
         returnCells.push(++cellIndex);
       }
     } else {
       let cellIndex = currentCell;
-      while (cellIndex >= dimensions.width && cells[cellIndex - puzzle.body[0].dimensions.width].answer) {
-        returnCells.push(cellIndex -= puzzle.body[0].dimensions.width);
+      while (cellIndex >= width && cells[cellIndex - width].answer) {
+        returnCells.push(cellIndex -= width);
       }
       cellIndex = currentCell;
-      while (cellIndex < (dimensions.width * dimensions.height) - dimensions.width && cells[cellIndex + puzzle.body[0].dimensions.width].answer) {
-        returnCells.push(cellIndex += puzzle.body[0].dimensions.width);
+      while (cellIndex < (width * height) - width && cells[cellIndex + width].answer) {
+        returnCells.push(cellIndex += width);
       }
     }
     setSecondaryCells(returnCells);
     const currentClue = puzzle.body[0].cells[currentCell].clues[direction === 'Across' ? 0 : 1];
     elementsRef.current[currentClue].current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
-  }, [currentCell, direction, puzzle.body]);
+  }, [currentCell, direction, width, height, puzzle.body]);
 
   const handleCellClick = (cellIndex: number) => {
     if (currentCell === cellIndex) {
@@ -90,29 +90,29 @@ export default function Home() {
   const advanceCell = ({ reverse = false }: { reverse?: boolean } = {}) => {
     if (direction === 'Across') {
       if (reverse) {
-        if (currentCell % puzzle.body[0].dimensions.width <= 0) return;
+        if (currentCell % width <= 0) return;
         let nextCell = currentCell - 1;
-        while (!isCellUsable(nextCell) && nextCell % puzzle.body[0].dimensions.width > 0) nextCell--;
+        while (!isCellUsable(nextCell) && nextCell % width > 0) nextCell--;
         if (!isCellUsable(nextCell)) return;
         setCurrentCell(nextCell);
       } else {
-        if (currentCell % puzzle.body[0].dimensions.width >= puzzle.body[0].dimensions.width - 1) return;
+        if (currentCell % width >= width - 1) return;
         let nextCell = currentCell + 1;
-        while (!isCellUsable(nextCell) && nextCell % puzzle.body[0].dimensions.width < puzzle.body[0].dimensions.width - 1) nextCell++;
+        while (!isCellUsable(nextCell) && nextCell % width < width - 1) nextCell++;
         if (!isCellUsable(nextCell)) return;
         setCurrentCell(nextCell);
       }
     } else {
       if (reverse) {
-        if (currentCell - puzzle.body[0].dimensions.height < 0) return;
-        let nextCell = currentCell - puzzle.body[0].dimensions.height;
-        while (!isCellUsable(nextCell) && nextCell - puzzle.body[0].dimensions.height >= 0) nextCell -= puzzle.body[0].dimensions.height;
+        if (currentCell - height < 0) return;
+        let nextCell = currentCell - height;
+        while (!isCellUsable(nextCell) && nextCell - height >= 0) nextCell -= height;
         if (!isCellUsable(nextCell)) return;
         setCurrentCell(nextCell);
       } else {
-        if (currentCell + puzzle.body[0].dimensions.height >= puzzle.body[0].cells.length) return;
-        let nextCell = currentCell + puzzle.body[0].dimensions.height;
-        while (!isCellUsable(nextCell) && nextCell + puzzle.body[0].dimensions.height < puzzle.body[0].cells.length) nextCell += puzzle.body[0].dimensions.height;
+        if (currentCell + height >= puzzle.body[0].cells.length) return;
+        let nextCell = currentCell + height;
+        while (!isCellUsable(nextCell) && nextCell + height < puzzle.body[0].cells.length) nextCell += height;
         if (!isCellUsable(nextCell)) return;
         setCurrentCell(nextCell);
       }
@@ -165,21 +165,22 @@ export default function Home() {
 
   return (
     <div className="flex flex-col md:flex-row justify-center items-center h-screen" onKeyDown={(e) => handleKeyDown(e)}>
-      <div className={`grid grid-rows-${puzzle.body[0].dimensions.width} w-[100vw] md:max-w-3xl aspect-square p-2`}>
-        {Array.from({ length: puzzle.body[0].dimensions.height }).map((_, i) => (
-          <div key={i} className={`grid grid-cols-${puzzle.body[0].dimensions.height}`}>
-            {Array.from({ length: puzzle.body[0].dimensions.width }).map((_, j) => (
-              <div className={`relative border border-gray-500 ${cellColor((i * puzzle.body[0].dimensions.width) + j)} aspect-square w-auto h-auto`} key={`${(i * puzzle.body[0].dimensions.width) + j}`}>
-                {puzzle.body[0].cells[(i * puzzle.body[0].dimensions.width) + j].label &&
+      <div className={`grid grid-rows-${width} w-[100vw] md:max-w-3xl aspect-square p-2`}>
+        {Array.from({ length: height }).map((_, i) => (
+          <div key={i} className={`grid grid-cols-${height}`}>
+            {Array.from({ length: width }).map((_, j) => (
+              <div className={`relative border border-gray-500 ${cellColor((i * width) + j)} aspect-square w-auto h-auto`} key={`${(i * width) + j}`}>
+                {puzzle.body[0].cells[(i * width) + j].label &&
                   <div className="absolute inset-0 text-xs text-black select-none">
-                    {puzzle.body[0].cells[(i * puzzle.body[0].dimensions.width) + j].label}
+                    {puzzle.body[0].cells[(i * width) + j].label}
                   </div>}
-                {puzzle.body[0].cells[(i * puzzle.body[0].dimensions.width) + j].answer &&
-                  <div className="absolute inset-0 flex justify-center items-center text-3xl text-black select-none">
-                    {userAnswers[(i * puzzle.body[0].dimensions.width) + j]}
-                  </div>}
-                {puzzle.body[0].cells[(i * puzzle.body[0].dimensions.width) + j].answer &&
-                  <button className="absolute inset-0 z-10" onClick={() => handleCellClick(i * puzzle.body[0].dimensions.width + j)} />
+                {puzzle.body[0].cells[(i * width) + j].answer &&
+                  <>
+                    <div className="absolute inset-0 flex justify-center items-center text-3xl text-black select-none">
+                      {userAnswers[(i * width) + j]}
+                    </div>
+                    <button className="absolute inset-0 z-10" onClick={() => handleCellClick(i * width + j)} />
+                  </>
                 }
               </div>
             ))}
@@ -191,7 +192,9 @@ export default function Home() {
           return (
             <div key={directionIndex} className="flex flex-col w-[50vw] grow">
               <div className="pl-3 pt-1 pb-1">
-                <div className="text-xl font-bold m-0 p-0">{directionIndex}</div>
+                <div className="text-xl font-bold m-0 p-0">
+                  {directionIndex}
+                </div>
               </div>
               <ol className="p-2 overflow-auto">
                 {puzzle.body[0].clues.map((clue, i) => {
@@ -209,6 +212,6 @@ export default function Home() {
           )
         })}
       </div>
-    </div >
+    </div>
   );
 }
