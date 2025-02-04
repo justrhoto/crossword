@@ -193,24 +193,39 @@ export default function Home() {
       className="flex h-screen flex-col items-center justify-center xl:flex-row"
       onKeyDown={(e) => handleKeyDown(e)}
     >
-      <div className="justify-left 3xl:h-[72rem] flex w-[100vw] flex-row pt-1 pl-1 md:max-w-3xl xl:h-[48rem] xl:w-11 xl:flex-col">
+      <div className="justify-left 3xl:h-[72rem] flex w-[100vw] flex-row p-1 pb-0 md:max-w-3xl xl:h-[48rem] xl:w-11 xl:flex-col">
         <button
           onClick={() => {}}
-          className="m-1 w-8 cursor-pointer rounded-lg bg-gray-800 p-2 text-gray-400 transition duration-150 hover:bg-blue-600 hover:text-white"
+          className="group relative m-1 flex grow cursor-pointer flex-row justify-center rounded-lg bg-gray-800 p-2 text-gray-400 transition duration-150 hover:bg-blue-600 hover:text-white xl:grow-0"
         >
-          <FaGear />
+          <div className="flex h-full items-center">
+            <FaGear />
+          </div>
+          <div className="right-10 m-0 p-0 pl-1 text-sm group-hover:visible xl:invisible xl:absolute xl:justify-end">
+            Settings
+          </div>
         </button>
         <button
           onClick={() => {}}
-          className="m-1 w-8 cursor-pointer rounded-lg bg-gray-800 p-2 text-gray-400 transition duration-150 hover:bg-green-500 hover:text-white"
+          className="group relative m-1 flex grow cursor-pointer flex-row justify-center rounded-lg bg-gray-800 p-2 text-gray-400 transition duration-150 hover:bg-green-500 hover:text-white xl:grow-0"
         >
-          <FaCheck />
+          <div className="flex h-full items-center">
+            <FaCheck />
+          </div>
+          <div className="right-10 m-0 p-0 pl-1 text-sm group-hover:visible xl:invisible xl:absolute xl:justify-end">
+            Check
+          </div>
         </button>
         <button
           onClick={() => {}}
-          className="m-1 w-8 cursor-pointer rounded-lg bg-gray-800 p-2 text-gray-400 transition duration-150 hover:bg-red-700 hover:text-yellow-400"
+          className="group relative m-1 flex grow cursor-pointer flex-row justify-center rounded-lg bg-gray-800 p-2 text-gray-400 transition duration-150 hover:bg-red-700 hover:text-yellow-400 xl:grow-0"
         >
-          <FaPencilAlt />
+          <div className="flex h-full items-center">
+            <FaPencilAlt />
+          </div>
+          <div className="right-10 m-0 p-0 pl-1 text-sm group-hover:visible group-hover:text-white xl:invisible xl:absolute xl:justify-end">
+            Rebus
+          </div>
         </button>
       </div>
       <div
