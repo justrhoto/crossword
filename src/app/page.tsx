@@ -139,6 +139,7 @@ export default function Home() {
   };
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
+    e.preventDefault();
     if (e.key === "ArrowRight") {
       if (direction != "Across") {
         setDirection("Across");
@@ -169,7 +170,6 @@ export default function Home() {
       );
       advanceCell({ reverse: true });
     } else if (e.key === "Enter" || e.key === "Tab") {
-      e.preventDefault();
       setDirection(direction === "Across" ? "Down" : "Across");
     } else if (e.key.length === 1 && e.key.match(/[a-zA-Z]/)) {
       setUserAnswers(
@@ -229,7 +229,7 @@ export default function Home() {
         </button>
       </div>
       <div
-        className={`3xl:max-w-5xl grid aspect-square w-[100vw] grid-rows-(--grid-template-rows-15) p-2 md:max-w-3xl`}
+        className={`3xl:max-w-6xl grid aspect-square w-[100vw] grid-rows-(--grid-template-rows-15) p-2 md:max-w-3xl`}
       >
         {Array.from({ length: height }).map((_, i) => (
           <div
@@ -250,7 +250,7 @@ export default function Home() {
                 )}
                 {puzzle.body[0].cells[i * width + j].answer && (
                   <>
-                    <div className="absolute inset-0 flex items-center justify-center text-3xl text-black select-none">
+                    <div className="3xl:text-5xl absolute inset-0 flex items-center justify-center text-3xl text-black select-none">
                       {userAnswers[i * width + j]}
                     </div>
                     <button
