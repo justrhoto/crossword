@@ -3,6 +3,7 @@
 import { useEffect, useState, useRef, createRef } from "react";
 import { FaGear, FaCheck } from "react-icons/fa6";
 import _puzzle from "./crossword.json";
+import { FaPencilAlt } from "react-icons/fa";
 
 interface Puzzle {
   body: {
@@ -192,22 +193,28 @@ export default function Home() {
       className="flex h-screen flex-col items-center justify-center md:flex-row"
       onKeyDown={(e) => handleKeyDown(e)}
     >
-      <div className="justify-left flex w-[100vw] flex-row">
+      <div className="justify-left flex w-[100vw] flex-row pl-1 pt-1 md:h-[48rem] md:w-11 md:flex-col">
         <button
           onClick={() => {}}
-          className="m-2 rounded-lg bg-gray-800 p-2 text-gray-400"
+          className="m-1 w-8 rounded-lg bg-gray-800 p-2 text-gray-400 transition duration-150 hover:bg-blue-600 hover:text-white"
         >
           <FaGear />
         </button>
         <button
           onClick={() => {}}
-          className="m-2 rounded-lg bg-gray-800 p-2 text-gray-400"
+          className="m-1 w-8 rounded-lg bg-gray-800 p-2 text-gray-400 transition duration-150 hover:bg-green-500 hover:text-white"
         >
           <FaCheck />
         </button>
+        <button
+          onClick={() => {}}
+          className="m-1 w-8 rounded-lg bg-gray-800 p-2 text-gray-400 transition duration-150 hover:bg-red-700 hover:text-yellow-400"
+        >
+          <FaPencilAlt />
+        </button>
       </div>
       <div
-        className={`grid grid-rows-${width} aspect-square w-[100vw] p-2 md:max-w-3xl`}
+        className={`grid grid-rows-${width} 3xl:max-w-5xl aspect-square w-[100vw] p-2 md:max-w-3xl`}
       >
         {Array.from({ length: height }).map((_, i) => (
           <div key={i} className={`grid grid-cols-${height}`}>
