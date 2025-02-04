@@ -190,10 +190,10 @@ export default function Home() {
 
   return (
     <div
-      className="flex h-screen flex-col items-center justify-center md:flex-row"
+      className="flex h-screen flex-col items-center justify-center xl:flex-row"
       onKeyDown={(e) => handleKeyDown(e)}
     >
-      <div className="justify-left flex w-[100vw] flex-row pl-1 pt-1 md:h-[48rem] md:w-11 md:flex-col">
+      <div className="justify-left 3xl:h-[72rem] flex w-[100vw] flex-row pt-1 pl-1 md:max-w-3xl xl:h-[48rem] xl:w-11 xl:flex-col">
         <button
           onClick={() => {}}
           className="m-1 w-8 rounded-lg bg-gray-800 p-2 text-gray-400 transition duration-150 hover:bg-blue-600 hover:text-white"
@@ -214,7 +214,7 @@ export default function Home() {
         </button>
       </div>
       <div
-        className={`grid grid-rows-${width} 3xl:max-w-5xl aspect-square w-[100vw] p-2 md:max-w-3xl`}
+        className={`grid grid-rows-${width} 3xl:max-w-[72rem] aspect-square w-[100vw] p-2 md:max-w-3xl`}
       >
         {Array.from({ length: height }).map((_, i) => (
           <div key={i} className={`grid grid-cols-${height}`}>
@@ -226,13 +226,13 @@ export default function Home() {
                 key={`${i * width + j}`}
               >
                 {puzzle.body[0].cells[i * width + j].label && (
-                  <div className="absolute inset-0 select-none text-xs text-black">
+                  <div className="absolute inset-0 text-xs text-black select-none">
                     {puzzle.body[0].cells[i * width + j].label}
                   </div>
                 )}
                 {puzzle.body[0].cells[i * width + j].answer && (
                   <>
-                    <div className="absolute inset-0 flex select-none items-center justify-center text-3xl text-black">
+                    <div className="absolute inset-0 flex items-center justify-center text-3xl text-black select-none">
                       {userAnswers[i * width + j]}
                     </div>
                     <button
@@ -246,16 +246,16 @@ export default function Home() {
           </div>
         ))}
       </div>
-      <div className="flex w-[100vw] flex-row justify-end overflow-auto md:max-h-[75vh] md:max-w-xl lg:pl-9">
+      <div className="flex w-[100vw] flex-row justify-end overflow-auto md:max-h-[75vh] md:max-w-xl xl:pl-9">
         {["Across", "Down"].map((directionIndex) => {
           return (
             <div key={directionIndex} className="flex w-[50vw] grow flex-col">
-              <div className="pb-1 pl-3 pt-1">
+              <div className="pt-1 pb-1 pl-3">
                 <div className="m-0 p-0 text-xl font-bold">
                   {directionIndex}
                 </div>
               </div>
-              <ol className="overflow-auto p-2 scrollbar-thin scrollbar-track-transparent scrollbar-thumb-gray-800">
+              <ol className="scrollbar-thin scrollbar-track-transparent scrollbar-thumb-gray-800 overflow-auto p-2">
                 {puzzle.body[0].clues.map((clue, i) => {
                   if (clue.direction != directionIndex) return;
                   return (

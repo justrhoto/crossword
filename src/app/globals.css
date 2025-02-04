@@ -1,14 +1,18 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
 
-:root {
-  --background: #0a0a0a;
-  --foreground: #ededed;
-}
+@plugin 'tailwind-scrollbar';
 
 @theme {
-  --breakpoint-3xl: 1930px;
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --breakpoint-3xl: 130rem;
+}
+
+@layer utilities {
+  :root {
+    --background: #0a0a0a;
+    --foreground: #ededed;
+  }
 }
 
 body {
