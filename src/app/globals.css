@@ -5,7 +5,18 @@
 @theme {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
+
   --breakpoint-3xl: 130rem;
+
+  --grid-template-columns-13: repeat(13, minmax(0, 1fr));
+  --grid-template-columns-14: repeat(14, minmax(0, 1fr));
+  --grid-template-columns-15: repeat(15, minmax(0, 1fr));
+  --grid-template-columns-16: repeat(16, minmax(0, 1fr));
+
+  --grid-template-rows-13: repeat(13, minmax(0, 1fr));
+  --grid-template-rows-14: repeat(14, minmax(0, 1fr));
+  --grid-template-rows-15: repeat(15, minmax(0, 1fr));
+  --grid-template-rows-16: repeat(16, minmax(0, 1fr));
 }
 
 @layer utilities {
@@ -19,12 +30,4 @@ body {
   color: var(--foreground);
   background: var(--background);
   font-family: Arial, Helvetica, sans-serif;
-}
-
-.grid-cols-15 {
-  grid-template-columns: repeat(15, minmax(0, 1fr));
-}
-
-.grid-rows-15 {
-  grid-template-rows: repeat(15, minmax(0, 1fr));
 }

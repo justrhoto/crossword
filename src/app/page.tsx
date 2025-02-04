@@ -214,10 +214,13 @@ export default function Home() {
         </button>
       </div>
       <div
-        className={`grid grid-rows-${width} 3xl:max-w-[72rem] aspect-square w-[100vw] p-2 md:max-w-3xl`}
+        className={`3xl:max-w-5xl grid aspect-square w-[100vw] grid-rows-(--grid-template-rows-15) p-2 md:max-w-3xl`}
       >
         {Array.from({ length: height }).map((_, i) => (
-          <div key={i} className={`grid grid-cols-${height}`}>
+          <div
+            key={i}
+            className={`grid grid-cols-(--grid-template-columns-15)`}
+          >
             {Array.from({ length: width }).map((_, j) => (
               <div
                 className={`relative border border-gray-500 ${cellColor(
