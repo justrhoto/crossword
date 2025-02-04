@@ -196,19 +196,19 @@ export default function Home() {
       <div className="justify-left 3xl:h-[72rem] flex w-[100vw] flex-row pt-1 pl-1 md:max-w-3xl xl:h-[48rem] xl:w-11 xl:flex-col">
         <button
           onClick={() => {}}
-          className="m-1 w-8 rounded-lg bg-gray-800 p-2 text-gray-400 transition duration-150 hover:bg-blue-600 hover:text-white"
+          className="m-1 w-8 cursor-pointer rounded-lg bg-gray-800 p-2 text-gray-400 transition duration-150 hover:bg-blue-600 hover:text-white"
         >
           <FaGear />
         </button>
         <button
           onClick={() => {}}
-          className="m-1 w-8 rounded-lg bg-gray-800 p-2 text-gray-400 transition duration-150 hover:bg-green-500 hover:text-white"
+          className="m-1 w-8 cursor-pointer rounded-lg bg-gray-800 p-2 text-gray-400 transition duration-150 hover:bg-green-500 hover:text-white"
         >
           <FaCheck />
         </button>
         <button
           onClick={() => {}}
-          className="m-1 w-8 rounded-lg bg-gray-800 p-2 text-gray-400 transition duration-150 hover:bg-red-700 hover:text-yellow-400"
+          className="m-1 w-8 cursor-pointer rounded-lg bg-gray-800 p-2 text-gray-400 transition duration-150 hover:bg-red-700 hover:text-yellow-400"
         >
           <FaPencilAlt />
         </button>
@@ -236,7 +236,7 @@ export default function Home() {
                       {userAnswers[i * width + j]}
                     </div>
                     <button
-                      className="absolute inset-0 z-10"
+                      className="absolute inset-0 z-10 cursor-pointer"
                       onClick={() => handleCellClick(i * width + j)}
                     />
                   </>
@@ -270,7 +270,7 @@ export default function Home() {
                       }`}
                     >
                       <button
-                        className="size-full p-1 text-left"
+                        className="size-full cursor-pointer p-1 text-left"
                         onClick={() => {
                           setCurrentCell(clue.cells[0]);
                           setDirection(clue.direction);
