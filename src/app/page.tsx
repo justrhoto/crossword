@@ -41,7 +41,7 @@ interface Puzzle {
   };
 }
 
-export default function Home() {
+const Home = () => {
   const puzzle = _puzzle as Puzzle;
   const [currentCell, setCurrentCell] = useState(0);
   const [secondaryCells, setSecondaryCells] = useState<number[]>();
@@ -53,6 +53,7 @@ export default function Home() {
     puzzle.body[0].clues.map(() => createRef<HTMLLIElement>()),
   );
   const { width, height } = puzzle.body[0].dimensions;
+  const [showCheckMenu, setShowCheckMenu] = useState(false);
 
   useEffect(() => {
     const cells = puzzle.body[0].cells;
@@ -194,39 +195,56 @@ export default function Home() {
       onKeyDown={(e) => handleKeyDown(e)}
     >
       <div className="justify-left 3xl:h-[72rem] flex w-[100vw] flex-row p-1 pb-0 md:max-w-3xl xl:h-[48rem] xl:w-11 xl:flex-col">
-        <button
-          onClick={() => {}}
-          className="group relative m-1 flex grow cursor-pointer flex-row justify-center rounded-lg bg-gray-800 p-2 text-gray-400 transition duration-150 hover:bg-blue-600 hover:text-white xl:grow-0"
-        >
-          <div className="flex h-full items-center">
-            <FaGear />
+        <div className="relative flex grow xl:grow-0">
+          <button
+            onClick={() => {}}
+            className="group relative m-1 flex grow cursor-pointer flex-row justify-center rounded-lg bg-gray-800 p-2 text-gray-400 transition duration-150 hover:bg-blue-600 hover:text-white xl:grow-0"
+          >
+            <div className="flex h-full items-center">
+              <FaGear />
+            </div>
+            <div className="right-10 m-0 p-0 pl-1 text-sm group-hover:visible xl:invisible xl:absolute xl:justify-end">
+              Settings
+            </div>
+          </button>
+        </div>
+        <div className="relative flex grow xl:grow-0">
+          <button
+            onClick={() => {
+              setShowCheckMenu(!showCheckMenu);
+            }}
+            className="group relative m-1 flex grow cursor-pointer flex-row justify-center rounded-lg bg-gray-800 p-2 text-gray-400 transition duration-150 hover:bg-green-500 hover:text-white xl:grow-0"
+          >
+            <div className="flex h-full items-center">
+              <FaCheck />
+            </div>
+            <div className="right-10 m-0 p-0 pl-1 text-sm group-hover:visible xl:invisible xl:absolute xl:justify-end">
+              Check
+            </div>
+          </button>
+          <div
+            className={`absolute top-13 z-15 m-1 w-[31vw] rounded-lg border-2 border-green-800 bg-black md:max-w-[16rem] xl:top-0 xl:left-12 xl:max-w-[11rem] ${showCheckMenu ? "" : "hidden"}`}
+          >
+            <ul>
+              <li className="p-1">Check Cell</li>
+              <li className="border-t-1 border-b-1 p-1">Check Word</li>
+              <li className="p-1">Check Puzzle</li>
+            </ul>
           </div>
-          <div className="right-10 m-0 p-0 pl-1 text-sm group-hover:visible xl:invisible xl:absolute xl:justify-end">
-            Settings
-          </div>
-        </button>
-        <button
-          onClick={() => {}}
-          className="group relative m-1 flex grow cursor-pointer flex-row justify-center rounded-lg bg-gray-800 p-2 text-gray-400 transition duration-150 hover:bg-green-500 hover:text-white xl:grow-0"
-        >
-          <div className="flex h-full items-center">
-            <FaCheck />
-          </div>
-          <div className="right-10 m-0 p-0 pl-1 text-sm group-hover:visible xl:invisible xl:absolute xl:justify-end">
-            Check
-          </div>
-        </button>
-        <button
-          onClick={() => {}}
-          className="group relative m-1 flex grow cursor-pointer flex-row justify-center rounded-lg bg-gray-800 p-2 text-gray-400 transition duration-150 hover:bg-red-700 hover:text-yellow-400 xl:grow-0"
-        >
-          <div className="flex h-full items-center">
-            <FaPencilAlt />
-          </div>
-          <div className="right-10 m-0 p-0 pl-1 text-sm group-hover:visible group-hover:text-white xl:invisible xl:absolute xl:justify-end">
-            Rebus
-          </div>
-        </button>
+        </div>
+        <div className="relative flex grow xl:grow-0">
+          <button
+            onClick={() => {}}
+            className="group relative m-1 flex grow cursor-pointer flex-row justify-center rounded-lg bg-gray-800 p-2 text-gray-400 transition duration-150 hover:bg-red-700 hover:text-yellow-400 xl:grow-0"
+          >
+            <div className="flex h-full items-center">
+              <FaPencilAlt />
+            </div>
+            <div className="right-10 m-0 p-0 pl-1 text-sm group-hover:visible group-hover:text-white xl:invisible xl:absolute xl:justify-end">
+              Rebus
+            </div>
+          </button>
+        </div>
       </div>
       <div
         className={`3xl:max-w-6xl grid aspect-square w-[100vw] grid-rows-(--grid-template-rows-15) p-2 md:max-w-3xl`}
@@ -306,4 +324,6 @@ export default function Home() {
       </div>
     </div>
   );
-}
+};
+
+export default Home;
