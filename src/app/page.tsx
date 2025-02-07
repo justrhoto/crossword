@@ -103,7 +103,7 @@ const Home = () => {
   const advanceCell = ({ reverse = false }: { reverse?: boolean } = {}) => {
     if (direction === "Across") {
       if (reverse) {
-        if (currentCell % width <= 0) return;
+        if (currentCell % width == 0) return;
         let nextCell = currentCell - 1;
         while (!isCellUsable(nextCell) && nextCell % width > 0) nextCell--;
         if (!isCellUsable(nextCell)) return;
@@ -118,15 +118,15 @@ const Home = () => {
       }
     } else {
       if (reverse) {
-        if (currentCell - height < 0) return;
         let nextCell = currentCell - height;
+        if (nextCell < 0) return;
         while (!isCellUsable(nextCell) && nextCell - height >= 0)
           nextCell -= height;
         if (!isCellUsable(nextCell)) return;
         setCurrentCell(nextCell);
       } else {
-        if (currentCell + height >= puzzle.body[0].cells.length) return;
         let nextCell = currentCell + height;
+        if (nextCell >= puzzle.body[0].cells.length) return;
         while (
           !isCellUsable(nextCell) &&
           nextCell + height < puzzle.body[0].cells.length
