@@ -53,7 +53,6 @@ const Home = () => {
     puzzle.body[0].clues.map(() => createRef<HTMLLIElement>()),
   );
   const { width, height } = puzzle.body[0].dimensions;
-  const [showCheckMenu, setShowCheckMenu] = useState(false);
 
   useEffect(() => {
     const cells = puzzle.body[0].cells;
@@ -210,27 +209,31 @@ const Home = () => {
         </div>
         <div className="relative flex grow xl:grow-0">
           <button
-            onClick={() => {
-              setShowCheckMenu(!showCheckMenu);
-            }}
-            className="group relative m-1 flex grow cursor-pointer flex-row justify-center rounded-lg bg-gray-800 p-2 text-gray-400 transition duration-150 hover:bg-green-500 hover:text-white xl:grow-0"
+            onClick={() => {}}
+            className="group relative m-1 flex grow cursor-pointer flex-row justify-center rounded-lg bg-gray-800 p-2 text-gray-400 transition duration-150 hover:bg-green-500 hover:text-white focus:bg-green-500 focus:text-white xl:grow-0"
           >
             <div className="flex h-full items-center">
               <FaCheck />
             </div>
-            <div className="right-10 m-0 p-0 pl-1 text-sm group-hover:visible xl:invisible xl:absolute xl:justify-end">
+            <div className="right-10 m-0 p-0 pl-1 text-sm group-hover:visible group-focus:visible xl:invisible xl:absolute xl:justify-end">
               Check
             </div>
+            <div
+              className={`absolute top-full z-15 m-1 w-full scale-0 rounded-lg border-2 border-green-800 bg-black text-left opacity-0 transition-opacity duration-150 group-focus:scale-100 group-focus:opacity-100 md:max-w-[16rem] xl:-top-1 xl:left-full xl:w-40 xl:max-w-[11rem]`}
+            >
+              <ul>
+                <li className="p-1 transition-colors hover:bg-green-600">
+                  <a className="grow">Check Cell</a>
+                </li>
+                <li className="border-t-1 border-b-1 p-1 transition-colors hover:bg-green-700">
+                  <a>Check Word</a>
+                </li>
+                <li className="p-1 transition-colors hover:bg-green-800">
+                  <a>Check Puzzle</a>
+                </li>
+              </ul>
+            </div>
           </button>
-          <div
-            className={`absolute top-13 z-15 m-1 w-[31vw] rounded-lg border-2 border-green-800 bg-black md:max-w-[16rem] xl:top-0 xl:left-12 xl:max-w-[11rem] ${showCheckMenu ? "" : "hidden"}`}
-          >
-            <ul>
-              <li className="p-1">Check Cell</li>
-              <li className="border-t-1 border-b-1 p-1">Check Word</li>
-              <li className="p-1">Check Puzzle</li>
-            </ul>
-          </div>
         </div>
         <div className="relative flex grow xl:grow-0">
           <button
