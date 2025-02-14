@@ -4,6 +4,7 @@ import { useEffect, useState, useRef, createRef } from "react";
 import { FaGear, FaCheck } from "react-icons/fa6";
 import _puzzle from "./crossword.json";
 import { FaPencilAlt } from "react-icons/fa";
+import { useCookies } from "react-cookie";
 
 interface Puzzle {
   body: {
@@ -46,13 +47,33 @@ const Home = () => {
   const [currentCell, setCurrentCell] = useState(0);
   const [secondaryCells, setSecondaryCells] = useState<number[]>();
   const [direction, setDirection] = useState<"Across" | "Down">("Across");
+  const [cookies, setCookie] = useCookies(["userAnswers"]);
   const [userAnswers, setUserAnswers] = useState<string[]>(
     Array.from({ length: puzzle.body[0].cells.length }, () => ""),
   );
   const elementsRef = useRef(
     puzzle.body[0].clues.map(() => createRef<HTMLLIElement>()),
   );
+  const hasSetUserAnswers = useRef(false);
+
   const { width, height } = puzzle.body[0].dimensions;
+
+  useEffect(() => {
+    if (!hasSetUserAnswers.current && cookies.userAnswers) {
+      setUserAnswers(cookies.userAnswers);
+      hasSetUserAnswers.current = true;
+    }
+  }, [cookies.userAnswers]);
+
+  useEffect(() => {
+    setCookie("userAnswers", userAnswers);
+  }, [userAnswers, setCookie]);
+
+  const clearPuzzle = () => {
+    setUserAnswers(
+      Array.from({ length: puzzle.body[0].cells.length }, () => ""),
+    );
+  };
 
   useEffect(() => {
     const cells = puzzle.body[0].cells;
@@ -196,7 +217,9 @@ const Home = () => {
       <div className="justify-left 3xl:h-[72rem] flex w-[100vw] flex-row p-1 pb-0 md:max-w-3xl xl:h-[48rem] xl:w-11 xl:flex-col">
         <div className="relative flex grow xl:grow-0">
           <button
-            onClick={() => {}}
+            onClick={() => {
+              clearPuzzle();
+            }}
             className="group relative m-1 flex grow cursor-pointer flex-row justify-center rounded-lg bg-gray-800 p-2 text-gray-400 transition duration-150 hover:bg-blue-600 hover:text-white xl:grow-0"
           >
             <div className="flex h-full items-center">
