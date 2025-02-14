@@ -160,7 +160,6 @@ const Home = () => {
   };
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
-    e.preventDefault();
     if (e.key === "ArrowRight") {
       if (direction != "Across") {
         setDirection("Across");
@@ -191,6 +190,7 @@ const Home = () => {
       );
       advanceCell({ reverse: true });
     } else if (e.key === "Enter" || e.key === "Tab") {
+      e.preventDefault();
       setDirection(direction === "Across" ? "Down" : "Across");
     } else if (e.key.length === 1 && e.key.match(/[a-zA-Z]/)) {
       setUserAnswers(
