@@ -209,11 +209,8 @@ const Home = () => {
     return "bg-white";
   };
 
+  const OptionButtons = () => {
   return (
-    <div
-      className="flex h-screen flex-col items-center justify-center xl:flex-row"
-      onKeyDown={(e) => handleKeyDown(e)}
-    >
       <div className="justify-left 3xl:h-[72rem] flex w-[100vw] flex-row p-1 pb-0 md:max-w-3xl xl:h-[48rem] xl:w-11 xl:flex-col">
         <div className="relative flex grow xl:grow-0">
           <button
@@ -272,6 +269,11 @@ const Home = () => {
           </button>
         </div>
       </div>
+    );
+  };
+
+  const PuzzleGrid = () => {
+    return (
       <div
         className={`3xl:max-w-6xl grid aspect-square w-[100vw] grid-rows-(--grid-template-rows-15) p-2 md:max-w-3xl`}
       >
@@ -308,6 +310,11 @@ const Home = () => {
           </div>
         ))}
       </div>
+    );
+  };
+
+  const PuzzleClues = () => {
+    return (
       <div className="flex w-[100vw] flex-row justify-end overflow-auto md:max-h-[75vh] md:max-w-xl xl:pl-9">
         {["Across", "Down"].map((directionIndex) => {
           return (
@@ -348,6 +355,17 @@ const Home = () => {
           );
         })}
       </div>
+    );
+  };
+
+  return (
+    <div
+      className="flex h-screen flex-col items-center justify-center xl:flex-row"
+      onKeyDown={(e) => handleKeyDown(e)}
+    >
+      <OptionButtons />
+      <PuzzleGrid />
+      <PuzzleClues />
     </div>
   );
 };
