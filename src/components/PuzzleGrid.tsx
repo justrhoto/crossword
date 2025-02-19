@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Puzzle } from "../types/types";
+import { Puzzle } from "@/types/types";
 
 export const PuzzleGrid = (props: {
   puzzle: Puzzle;

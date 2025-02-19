@@ -1,5 +1,5 @@
 import { createRef, useEffect, useRef } from "react";
-import { Puzzle, Clue } from "../types/types";
+import { Puzzle, Clue } from "@/types/types";
 
 export const PuzzleClues = (props: {
   puzzle: Puzzle;
@@ -22,7 +22,7 @@ export const PuzzleClues = (props: {
   }, [currentCell, direction, puzzle.body]);
 
   return (
-    <div className="flex w-[100vw] flex-row justify-end overflow-auto md:max-h-[75vh] md:max-w-xl xl:pl-9">
+    <div className="flex h-[50vh] w-[100vw] flex-row justify-end md:max-h-[75vh] md:max-w-xl xl:pl-9">
       {["Across", "Down"].map((directionIndex) => {
         return (
           <div key={directionIndex} className="flex w-[50vw] grow flex-col">
