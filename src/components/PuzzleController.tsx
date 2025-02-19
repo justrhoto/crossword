@@ -113,7 +113,7 @@ export const PuzzleController = (props: {
 
   return (
     <div
-      className="flex h-auto flex-col items-center"
+      className="flex h-auto flex-col items-center xl:flex-row"
       onKeyDown={(e) => handleKeyDown(e)}
     >
       <PuzzleGrid

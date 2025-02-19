@@ -5,6 +5,7 @@ import { useState } from "react";
 export const OptionButtons = (props: { clearPuzzle: () => void }) => {
   const { clearPuzzle } = props;
   const [showSettings, setShowSettings] = useState(false);
+
   const SettingsDialog = () => {
     return (
       <div
@@ -34,6 +35,7 @@ export const OptionButtons = (props: { clearPuzzle: () => void }) => {
       </div>
     );
   };
+
   return (
     <div className="justify-left 3xl:h-[72rem] flex w-[100vw] flex-row p-1 pb-0 md:max-w-3xl xl:h-[48rem] xl:w-11 xl:flex-col">
       {showSettings && <SettingsDialog />}

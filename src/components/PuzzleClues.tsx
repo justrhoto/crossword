@@ -22,7 +22,7 @@ export const PuzzleClues = (props: {
   }, [currentCell, direction, puzzle.body]);
 
   return (
-    <div className="flex h-[50vh] w-[100vw] flex-row justify-end md:max-h-[75vh] md:max-w-xl xl:pl-9">
+    <div className="flex h-[calc(100vh-100vw-4rem)] w-[100vw] flex-row justify-end md:h-[calc(100vh-52rem)] md:max-h-[75vh] md:max-w-xl xl:h-auto xl:pl-9">
       {["Across", "Down"].map((directionIndex) => {
         return (
           <div key={directionIndex} className="flex w-[50vw] grow flex-col">
