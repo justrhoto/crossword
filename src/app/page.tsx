@@ -1,62 +1,23 @@
 "use client";
 
-import { useEffect, useState, useRef, createRef } from "react";
+import { useEffect, useState, useRef } from "react";
 import { FaGear, FaCheck } from "react-icons/fa6";
 import _puzzle from "./crossword.json";
 import { FaPencilAlt } from "react-icons/fa";
 import { useCookies } from "react-cookie";
-
-interface Puzzle {
-  body: {
-    board: string;
-    cells: {
-      answer: string;
-      clues: [number, number];
-      label: string;
-      type: number;
-    }[];
-    clueLists: unknown;
-    clues: {
-      cells: number[];
-      direction: "Across" | "Down";
-      label: string;
-      text: {
-        plain: string;
-      }[];
-    }[];
-    dimensions: {
-      height: number;
-      width: number;
-    };
-    SVG: unknown;
-  }[];
-  constructors: string[];
-  copyright: string;
-  editor: string;
-  id: number;
-  lastUpdated: string;
-  publicationDate: string;
-  relatedContent: {
-    text: string;
-    url: string;
-  };
-}
+import { Puzzle, Clue } from "../types/types";
+import { PuzzleGrid } from "../components/PuzzleGrid";
+import { PuzzleClues } from "../components/PuzzleClues";
 
 const Home = () => {
   const puzzle = _puzzle as Puzzle;
   const [currentCell, setCurrentCell] = useState(0);
-  const [secondaryCells, setSecondaryCells] = useState<number[]>();
   const [direction, setDirection] = useState<"Across" | "Down">("Across");
   const [cookies, setCookie] = useCookies(["userAnswers"]);
   const [userAnswers, setUserAnswers] = useState<string[]>(
     Array.from({ length: puzzle.body[0].cells.length }, () => ""),
   );
-  const elementsRef = useRef(
-    puzzle.body[0].clues.map(() => createRef<HTMLLIElement>()),
-  );
   const hasSetUserAnswers = useRef(false);
-
-  const { width, height } = puzzle.body[0].dimensions;
 
   useEffect(() => {
     if (!hasSetUserAnswers.current && cookies.userAnswers) {
@@ -75,40 +36,6 @@ const Home = () => {
     );
   };
 
-  useEffect(() => {
-    const cells = puzzle.body[0].cells;
-    const returnCells = [];
-    if (direction === "Across") {
-      let cellIndex = currentCell;
-      while (cellIndex % width != 0 && cells[cellIndex - 1].answer) {
-        returnCells.push(--cellIndex);
-      }
-      cellIndex = currentCell;
-      while ((cellIndex + 1) % width != 0 && cells[cellIndex + 1].answer) {
-        returnCells.push(++cellIndex);
-      }
-    } else {
-      let cellIndex = currentCell;
-      while (cellIndex >= width && cells[cellIndex - width].answer) {
-        returnCells.push((cellIndex -= width));
-      }
-      cellIndex = currentCell;
-      while (
-        cellIndex < width * height - width &&
-        cells[cellIndex + width].answer
-      ) {
-        returnCells.push((cellIndex += width));
-      }
-    }
-    setSecondaryCells(returnCells);
-    const currentClue =
-      puzzle.body[0].cells[currentCell].clues[direction === "Across" ? 0 : 1];
-    elementsRef.current[currentClue].current?.scrollIntoView({
-      behavior: "smooth",
-      block: "center",
-    });
-  }, [currentCell, direction, width, height, puzzle.body]);
-
   const handleCellClick = (cellIndex: number) => {
     if (currentCell === cellIndex) {
       setDirection(direction === "Across" ? "Down" : "Across");
@@ -117,11 +44,17 @@ const Home = () => {
     }
   };
 
+  const handleClueClick = (clue: Clue) => {
+    setCurrentCell(clue.cells[0]);
+    setDirection(clue.direction);
+  };
+
   const isCellUsable = (cellIndex: number) => {
     return !!puzzle.body[0].cells[cellIndex].answer;
   };
 
   const advanceCell = ({ reverse = false }: { reverse?: boolean } = {}) => {
+    const { width, height } = puzzle.body[0].dimensions;
     if (direction === "Across") {
       if (reverse) {
         if (currentCell % width == 0) return;
@@ -202,20 +135,37 @@ const Home = () => {
     }
   };
 
-  const cellColor = (cellIndex: number) => {
-    if (!puzzle.body[0].cells[cellIndex].answer) return "bg-black";
-    if (currentCell === cellIndex) return "bg-yellow-100";
-    if (secondaryCells?.includes(cellIndex)) return "bg-gray-300";
-    return "bg-white";
+  const [showSettings, setShowSettings] = useState(false);
+  const SettingsDialog = () => {
+    return (
+      <div className="bg-opacity-50 absolute inset-0 top-14 z-10 bg-black/50">
+        <div className="absolute top-40 left-1/2 w-100 -translate-x-1/2 -translate-y-1/2 transform bg-slate-600">
+          <div className="m-2 flex w-full items-center p-2">
+            <FaGear className="mr-2" /> Settings
+          </div>
+          <button
+            className="p-2"
+            onClick={() => {
+              clearPuzzle();
+            }}
+          >
+            Settings
+          </button>
+          <div className="p-2">Settings</div>
+          <div className="p-2">Settings</div>
+        </div>
+      </div>
+    );
   };
 
   const OptionButtons = () => {
-  return (
+    return (
       <div className="justify-left 3xl:h-[72rem] flex w-[100vw] flex-row p-1 pb-0 md:max-w-3xl xl:h-[48rem] xl:w-11 xl:flex-col">
+        {showSettings && <SettingsDialog />}
         <div className="relative flex grow xl:grow-0">
           <button
             onClick={() => {
-              clearPuzzle();
+              setShowSettings(!showSettings);
             }}
             className="group relative m-1 flex grow cursor-pointer flex-row justify-center rounded-lg bg-gray-800 p-2 text-gray-400 transition duration-150 hover:bg-blue-600 hover:text-white xl:grow-0"
           >
@@ -272,100 +222,25 @@ const Home = () => {
     );
   };
 
-  const PuzzleGrid = () => {
-    return (
-      <div
-        className={`3xl:max-w-6xl grid aspect-square w-[100vw] grid-rows-(--grid-template-rows-15) p-2 md:max-w-3xl`}
-      >
-        {Array.from({ length: height }).map((_, i) => (
-          <div
-            key={i}
-            className={`grid grid-cols-(--grid-template-columns-15)`}
-          >
-            {Array.from({ length: width }).map((_, j) => (
-              <div
-                className={`relative border border-gray-500 ${cellColor(
-                  i * width + j,
-                )} aspect-square h-auto w-auto`}
-                key={`${i * width + j}`}
-              >
-                {puzzle.body[0].cells[i * width + j].label && (
-                  <div className="absolute inset-0 text-xs text-black select-none">
-                    {puzzle.body[0].cells[i * width + j].label}
-                  </div>
-                )}
-                {puzzle.body[0].cells[i * width + j].answer && (
-                  <>
-                    <div className="3xl:text-5xl absolute inset-0 flex items-center justify-center text-3xl text-black select-none">
-                      {userAnswers[i * width + j]}
-                    </div>
-                    <button
-                      className="absolute inset-0 z-10 cursor-pointer"
-                      onClick={() => handleCellClick(i * width + j)}
-                    />
-                  </>
-                )}
-              </div>
-            ))}
-          </div>
-        ))}
-      </div>
-    );
-  };
-
-  const PuzzleClues = () => {
-    return (
-      <div className="flex w-[100vw] flex-row justify-end overflow-auto md:max-h-[75vh] md:max-w-xl xl:pl-9">
-        {["Across", "Down"].map((directionIndex) => {
-          return (
-            <div key={directionIndex} className="flex w-[50vw] grow flex-col">
-              <div className="pt-1 pb-1 pl-3">
-                <div className="m-0 p-0 text-xl font-bold">
-                  {directionIndex}
-                </div>
-              </div>
-              <ol className="scrollbar-thin scrollbar-track-transparent scrollbar-thumb-gray-800 overflow-auto p-2">
-                {puzzle.body[0].clues.map((clue, i) => {
-                  if (clue.direction != directionIndex) return;
-                  return (
-                    <li
-                      key={i}
-                      ref={elementsRef.current[i]}
-                      className={`font-white text-sm hover:bg-gray-800 ${
-                        clue.cells.includes(currentCell) &&
-                        clue.direction === direction
-                          ? "bg-gray-900"
-                          : ""
-                      }`}
-                    >
-                      <button
-                        className="size-full cursor-pointer p-1 text-left"
-                        onClick={() => {
-                          setCurrentCell(clue.cells[0]);
-                          setDirection(clue.direction);
-                        }}
-                      >
-                        {clue.label}. {clue.text[0].plain}
-                      </button>
-                    </li>
-                  );
-                })}
-              </ol>
-            </div>
-          );
-        })}
-      </div>
-    );
-  };
-
   return (
     <div
       className="flex h-screen flex-col items-center justify-center xl:flex-row"
       onKeyDown={(e) => handleKeyDown(e)}
     >
       <OptionButtons />
-      <PuzzleGrid />
-      <PuzzleClues />
+      <PuzzleGrid
+        puzzle={puzzle}
+        onCellClick={(i) => handleCellClick(i)}
+        currentCell={currentCell}
+        direction={direction}
+        userAnswers={userAnswers}
+      />
+      <PuzzleClues
+        puzzle={puzzle}
+        currentCell={currentCell}
+        direction={direction}
+        onClueClick={(clue) => handleClueClick(clue)}
+      />
     </div>
   );
 };
