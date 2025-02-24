@@ -1,8 +1,15 @@
 import { FaGear, FaCheck } from "react-icons/fa6";
 import { FaPencilAlt } from "react-icons/fa";
 import { useState } from "react";
+import { PuzzleCursor } from "@/types/types";
+import { UserAnswer } from "@/lib/UserAnswer";
 
-export const OptionButtons = (props: { clearPuzzle: () => void }) => {
+export const OptionButtons = (props: {
+  clearPuzzle: () => void;
+  puzzleCursor: PuzzleCursor;
+  userAnswers: UserAnswer[];
+  setUserAnswers: (answers: UserAnswer[]) => void;
+}) => {
   const { clearPuzzle } = props;
   const [showSettings, setShowSettings] = useState(false);
 
@@ -36,6 +43,29 @@ export const OptionButtons = (props: { clearPuzzle: () => void }) => {
     );
   };
 
+  function checkCell(cursor = props.puzzleCursor): void {
+    const { currentCell } = cursor;
+    const { userAnswers, setUserAnswers } = props;
+    const newAnswers = userAnswers.map((answer, index) =>
+      index === currentCell
+        ? new UserAnswer({
+            answer: answer.answer,
+            checked: true,
+            correct: answer.correct,
+          })
+        : answer,
+    );
+    setUserAnswers(newAnswers);
+  }
+
+  function checkWord(): void {
+    throw new Error("Function not implemented.");
+  }
+
+  function checkPuzzle(): void {
+    throw new Error("Function not implemented.");
+  }
+
   return (
     <div className="justify-left 3xl:h-[72rem] flex w-[100vw] flex-row p-1 pb-0 md:max-w-3xl xl:h-[48rem] xl:w-11 xl:flex-col">
       {showSettings && <SettingsDialog />}
@@ -55,7 +85,7 @@ export const OptionButtons = (props: { clearPuzzle: () => void }) => {
         </button>
       </div>
       <div className="relative flex grow xl:grow-0">
-        <button
+        <a
           onClick={() => {}}
           className="group relative m-1 flex grow cursor-pointer flex-row justify-center rounded-lg bg-gray-800 p-2 text-gray-400 transition duration-150 hover:bg-green-500 hover:text-white focus:bg-green-500 focus:text-white xl:grow-0"
         >
@@ -70,17 +100,32 @@ export const OptionButtons = (props: { clearPuzzle: () => void }) => {
           >
             <ul>
               <li className="p-1 transition-colors hover:bg-green-600">
-                <a className="grow">Check Cell</a>
+                <button
+                  className="h-full w-full cursor-pointer"
+                  onClick={() => checkCell()}
+                >
+                  Check Cell
+                </button>
               </li>
               <li className="border-t-1 border-b-1 p-1 transition-colors hover:bg-green-700">
-                <a>Check Word</a>
+                <button
+                  className="h-full w-full cursor-pointer"
+                  onClick={() => checkWord()}
+                >
+                  Check Word
+                </button>
               </li>
               <li className="p-1 transition-colors hover:bg-green-800">
-                <a>Check Puzzle</a>
+                <button
+                  className="h-full w-full cursor-pointer"
+                  onClick={() => checkPuzzle()}
+                >
+                  Check Puzzle
+                </button>
               </li>
             </ul>
           </div>
-        </button>
+        </a>
       </div>
       <div className="relative flex grow xl:grow-0">
         <button

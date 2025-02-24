@@ -35,3 +35,9 @@ export interface Clue {
     plain: string;
   }[];
 }
+
+export interface PuzzleCursor {
+  currentCell: number;
+  direction: "Across" | "Down";
+  wordCells: number[];
+}

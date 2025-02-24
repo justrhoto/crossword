@@ -1,16 +1,58 @@
-import { useState } from "react";
-import { Clue, Puzzle } from "@/types/types";
+import { useEffect, useState } from "react";
+import { Clue, Puzzle, PuzzleCursor } from "@/types/types";
 import { PuzzleClues } from "@/components/PuzzleClues";
 import { PuzzleGrid } from "@/components/PuzzleGrid";
+import { UserAnswer } from "@/lib/UserAnswer";
 
 export const PuzzleController = (props: {
   puzzle: Puzzle;
-  userAnswers: string[];
-  setUserAnswers: (answers: string[]) => void;
+  userAnswers: UserAnswer[];
+  setUserAnswers: (answers: UserAnswer[]) => void;
+  setPuzzleCursor: (cursor: PuzzleCursor) => void;
 }) => {
   const [direction, setDirection] = useState<"Across" | "Down">("Across");
-  const { puzzle, userAnswers, setUserAnswers } = props;
+  const { puzzle, userAnswers, setUserAnswers, setPuzzleCursor } = props;
   const [currentCell, setCurrentCell] = useState(0);
+  const [cursor, setCursor] = useState<PuzzleCursor>({
+    currentCell: 0,
+    direction: "Across",
+    wordCells: [],
+  });
+
+  useEffect(() => {
+    setPuzzleCursor(cursor);
+  }, [cursor, setPuzzleCursor]);
+
+  useEffect(() => {
+    const {
+      cells,
+      dimensions: { height, width },
+    } = puzzle.body[0];
+    const wordCells = [];
+    if (direction === "Across") {
+      let cellIndex = currentCell;
+      while (cellIndex % width != 0 && cells[cellIndex - 1].answer) {
+        wordCells.push(--cellIndex);
+      }
+      cellIndex = currentCell;
+      while ((cellIndex + 1) % width != 0 && cells[cellIndex + 1].answer) {
+        wordCells.push(++cellIndex);
+      }
+    } else {
+      let cellIndex = currentCell;
+      while (cellIndex >= width && cells[cellIndex - width].answer) {
+        wordCells.push((cellIndex -= width));
+      }
+      cellIndex = currentCell;
+      while (
+        cellIndex < width * height - width &&
+        cells[cellIndex + width].answer
+      ) {
+        wordCells.push((cellIndex += width));
+      }
+    }
+    setCursor({ currentCell, direction, wordCells });
+  }, [currentCell, direction, puzzle.body]);
 
   const isCellUsable = (cellIndex: number) => {
     return !!puzzle.body[0].cells[cellIndex].answer;
@@ -95,7 +137,9 @@ export const PuzzleController = (props: {
       advanceCell({ reverse: true });
     } else if (e.key === "Backspace") {
       setUserAnswers(
-        userAnswers.map((answer, i) => (i === currentCell ? "" : answer)),
+        userAnswers.map((answer, i) =>
+          i === currentCell ? new UserAnswer("") : answer,
+        ),
       );
       advanceCell({ reverse: true });
     } else if (e.key === "Enter" || e.key === "Tab") {
@@ -104,7 +148,13 @@ export const PuzzleController = (props: {
     } else if (e.key.length === 1 && e.key.match(/[a-zA-Z]/)) {
       setUserAnswers(
         userAnswers.map((answer, i) =>
-          i === currentCell ? e.key.toUpperCase() : answer,
+          i === currentCell
+            ? new UserAnswer({
+                answer: e.key.toUpperCase(),
+                checked: false,
+                correct: e.key.toUpperCase() === puzzle.body[0].cells[i].answer,
+              })
+            : answer,
         ),
       );
       advanceCell();
@@ -119,8 +169,7 @@ export const PuzzleController = (props: {
       <PuzzleGrid
         puzzle={puzzle}
         onCellClick={(i) => handleCellClick(i)}
-        currentCell={currentCell}
-        direction={direction}
+        puzzleCursor={cursor}
         userAnswers={userAnswers}
       />
       <PuzzleClues

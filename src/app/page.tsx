@@ -3,18 +3,27 @@
 import { useEffect, useState, useRef } from "react";
 import _puzzle from "./crossword.json";
 import { useCookies } from "react-cookie";
-import { Puzzle } from "@/types/types";
+import { Puzzle, PuzzleCursor } from "@/types/types";
 import { PuzzleController } from "@/components/PuzzleController";
 import { OptionButtons } from "@/components/OptionButtons";
+import { UserAnswer } from "@/lib/UserAnswer";
 
 const Home = () => {
   const puzzle = _puzzle as Puzzle;
 
   const [cookies, setCookie] = useCookies(["userAnswers"]);
-  const [userAnswers, setUserAnswers] = useState<string[]>(
-    Array.from({ length: puzzle.body[0].cells.length }, () => ""),
+  const [userAnswers, setUserAnswers] = useState<UserAnswer[]>(
+    Array.from(
+      { length: puzzle.body[0].cells.length },
+      () => new UserAnswer(""),
+    ),
   );
   const hasSetUserAnswers = useRef(false);
+  const [puzzleCursor, setPuzzleCursor] = useState<PuzzleCursor>({
+    currentCell: 0,
+    direction: "Across",
+    wordCells: [],
+  });
 
   useEffect(() => {
     if (!hasSetUserAnswers.current && cookies.userAnswers) {
@@ -29,17 +38,26 @@ const Home = () => {
 
   const clearPuzzle = () => {
     setUserAnswers(
-      Array.from({ length: puzzle.body[0].cells.length }, () => ""),
+      Array.from(
+        { length: puzzle.body[0].cells.length },
+        () => new UserAnswer(""),
+      ),
     );
   };
 
   return (
     <div className="flex h-screen flex-col items-center justify-center xl:flex-row">
-      <OptionButtons clearPuzzle={clearPuzzle} />
+      <OptionButtons
+        clearPuzzle={clearPuzzle}
+        puzzleCursor={puzzleCursor}
+        userAnswers={userAnswers}
+        setUserAnswers={(answers) => setUserAnswers(answers)}
+      />
       <PuzzleController
         puzzle={puzzle}
         userAnswers={userAnswers}
-        setUserAnswers={(str) => setUserAnswers(str)}
+        setUserAnswers={(answers) => setUserAnswers(answers)}
+        setPuzzleCursor={(cursor) => setPuzzleCursor(cursor)}
       />
     </div>
   );
