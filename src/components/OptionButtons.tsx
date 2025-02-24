@@ -1,6 +1,6 @@
 import { FaGear, FaCheck } from "react-icons/fa6";
 import { FaPencilAlt } from "react-icons/fa";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { PuzzleCursor } from "@/types/types";
 import { UserAnswer } from "@/lib/UserAnswer";
 
@@ -12,6 +12,24 @@ export const OptionButtons = (props: {
 }) => {
   const { clearPuzzle } = props;
   const [showSettings, setShowSettings] = useState(false);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(event.target as Node)
+      ) {
+        setIsDropdownOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [dropdownRef]);
 
   const SettingsDialog = () => {
     return (
@@ -84,9 +102,11 @@ export const OptionButtons = (props: {
           </div>
         </button>
       </div>
-      <div className="relative flex grow xl:grow-0">
-        <a
-          onClick={() => {}}
+      <div className="relative flex grow xl:grow-0" ref={dropdownRef}>
+        <button
+          onClick={() => {
+            setIsDropdownOpen(!isDropdownOpen);
+          }}
           className="group relative m-1 flex grow cursor-pointer flex-row justify-center rounded-lg bg-gray-800 p-2 text-gray-400 transition duration-150 hover:bg-green-500 hover:text-white focus:bg-green-500 focus:text-white xl:grow-0"
         >
           <div className="flex h-full items-center">
@@ -95,14 +115,19 @@ export const OptionButtons = (props: {
           <div className="right-10 m-0 p-0 pl-1 text-sm group-hover:visible group-focus:visible xl:invisible xl:absolute xl:justify-end">
             Check
           </div>
+        </button>
+        {isDropdownOpen && (
           <div
-            className={`absolute top-full z-15 m-1 w-full scale-0 rounded-lg border-2 border-green-800 bg-black text-left opacity-0 transition-opacity duration-150 group-focus:scale-100 group-focus:opacity-100 md:max-w-[16rem] xl:-top-1 xl:left-full xl:w-40 xl:max-w-[11rem]`}
+            className={`absolute top-full z-15 m-1 w-full rounded-lg border-2 border-green-800 bg-black text-left transition-opacity duration-150 group-focus:scale-100 group-focus:opacity-100 md:max-w-[16rem] xl:-top-1 xl:left-full xl:w-40 xl:max-w-[11rem]`}
           >
             <ul>
               <li className="p-1 transition-colors hover:bg-green-600">
                 <button
                   className="h-full w-full cursor-pointer"
-                  onClick={() => checkCell()}
+                  onClick={() => {
+                    setIsDropdownOpen(false);
+                    checkCell();
+                  }}
                 >
                   Check Cell
                 </button>
@@ -110,7 +135,10 @@ export const OptionButtons = (props: {
               <li className="border-t-1 border-b-1 p-1 transition-colors hover:bg-green-700">
                 <button
                   className="h-full w-full cursor-pointer"
-                  onClick={() => checkWord()}
+                  onClick={() => {
+                    setIsDropdownOpen(false);
+                    checkWord();
+                  }}
                 >
                   Check Word
                 </button>
@@ -118,14 +146,17 @@ export const OptionButtons = (props: {
               <li className="p-1 transition-colors hover:bg-green-800">
                 <button
                   className="h-full w-full cursor-pointer"
-                  onClick={() => checkPuzzle()}
+                  onClick={() => {
+                    setIsDropdownOpen(false);
+                    checkPuzzle();
+                  }}
                 >
                   Check Puzzle
                 </button>
               </li>
             </ul>
           </div>
-        </a>
+        )}
       </div>
       <div className="relative flex grow xl:grow-0">
         <button
