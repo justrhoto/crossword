@@ -61,27 +61,45 @@ export const OptionButtons = (props: {
     );
   };
 
-  function checkCell(cursor = props.puzzleCursor): void {
-    const { currentCell } = cursor;
+  function checkCell(cell = props.puzzleCursor.currentCell): void {
     const { userAnswers, setUserAnswers } = props;
-    const newAnswers = userAnswers.map((answer, index) =>
-      index === currentCell
-        ? new UserAnswer({
-            answer: answer.answer,
-            checked: true,
-            correct: answer.correct,
-          })
-        : answer,
-    );
+    const newAnswers = userAnswers.map((answer, index) => {
+      if (index != cell || answer.answer === "") return answer;
+      return new UserAnswer({
+        answer: answer.answer,
+        checked: true,
+        correct: answer.correct,
+      });
+    });
     setUserAnswers(newAnswers);
   }
 
   function checkWord(): void {
-    throw new Error("Function not implemented.");
+    const { userAnswers, setUserAnswers } = props;
+    const { currentCell, wordCells } = props.puzzleCursor;
+    const newAnswers = userAnswers.map((answer, index) => {
+      if (answer.answer === "") return answer;
+      if (!wordCells.includes(index) && index != currentCell) return answer;
+      return new UserAnswer({
+        answer: answer.answer,
+        checked: true,
+        correct: answer.correct,
+      });
+    });
+    setUserAnswers(newAnswers);
   }
 
   function checkPuzzle(): void {
-    throw new Error("Function not implemented.");
+    const { userAnswers, setUserAnswers } = props;
+    const newAnswers = userAnswers.map((answer) => {
+      if (answer.answer === "") return answer;
+      return new UserAnswer({
+        answer: answer.answer,
+        checked: true,
+        correct: answer.correct,
+      });
+    });
+    setUserAnswers(newAnswers);
   }
 
   return (

@@ -29,6 +29,7 @@ export const PuzzleController = (props: {
       dimensions: { height, width },
     } = puzzle.body[0];
     const wordCells = [];
+    wordCells.push(currentCell);
     if (direction === "Across") {
       let cellIndex = currentCell;
       while (cellIndex % width != 0 && cells[cellIndex - 1].answer) {
