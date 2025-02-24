@@ -76,10 +76,10 @@ export const OptionButtons = (props: {
 
   function checkWord(): void {
     const { userAnswers, setUserAnswers } = props;
-    const { currentCell, wordCells } = props.puzzleCursor;
+    const { wordCells } = props.puzzleCursor;
     const newAnswers = userAnswers.map((answer, index) => {
       if (answer.answer === "") return answer;
-      if (!wordCells.includes(index) && index != currentCell) return answer;
+      if (!wordCells.includes(index)) return answer;
       return new UserAnswer({
         answer: answer.answer,
         checked: true,
