@@ -64,7 +64,7 @@ export const OptionButtons = (props: {
   function checkCell(cell = props.puzzleCursor.currentCell): void {
     const { userAnswers, setUserAnswers } = props;
     const newAnswers = userAnswers.map((answer, index) => {
-      if (index != cell || answer.answer === "") return answer;
+      if (index != cell || answer.answer == "") return answer;
       return new UserAnswer({
         answer: answer.answer,
         checked: true,
@@ -78,7 +78,7 @@ export const OptionButtons = (props: {
     const { userAnswers, setUserAnswers } = props;
     const { wordCells } = props.puzzleCursor;
     const newAnswers = userAnswers.map((answer, index) => {
-      if (answer.answer === "") return answer;
+      if (answer.answer == "") return answer;
       if (!wordCells.includes(index)) return answer;
       return new UserAnswer({
         answer: answer.answer,
@@ -92,7 +92,7 @@ export const OptionButtons = (props: {
   function checkPuzzle(): void {
     const { userAnswers, setUserAnswers } = props;
     const newAnswers = userAnswers.map((answer) => {
-      if (answer.answer === "") return answer;
+      if (answer.answer == "") return answer;
       return new UserAnswer({
         answer: answer.answer,
         checked: true,
