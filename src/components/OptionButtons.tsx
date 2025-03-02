@@ -12,6 +12,7 @@ export const OptionButtons = (props: {
 }) => {
   const { clearPuzzle } = props;
   const [showSettings, setShowSettings] = useState(false);
+  const [showRebus, setShowRebus] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
@@ -54,6 +55,38 @@ export const OptionButtons = (props: {
               }}
             >
               Reset Puzzle
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  };
+
+  const RebusDialog = () => {
+    return (
+      <div
+        className="bg-opacity-50 absolute inset-0 z-15 bg-black/50"
+        onClick={() => setShowRebus(false)}
+      >
+        <div
+          className="absolute top-40 left-1/2 z-20 w-100 -translate-x-1/2 -translate-y-1/2 transform bg-slate-600"
+          onClick={(e) => e.stopPropagation()}
+        >
+          <div className="m-2 flex w-full items-center p-2">
+            <FaPencilAlt className="mx-2" /> Rebus
+          </div>
+          <hr className="my-2 border-t border-gray-300" />
+          <div className="my-5 flex w-full justify-between">
+            <input
+              className="m-2 mx-5 grow border-2 border-gray-500 p-2"
+              type="text"
+              placeholder="Rebus Text"
+            />
+            <button
+              onClick={() => {}}
+              className="m-2 mx-5 cursor-pointer rounded-lg bg-slate-950 p-2 transition duration-150 hover:bg-red-600"
+            >
+              Submit
             </button>
           </div>
         </div>
@@ -105,6 +138,7 @@ export const OptionButtons = (props: {
   return (
     <div className="justify-left 3xl:h-[72rem] flex w-[100vw] flex-row p-1 pb-0 md:max-w-3xl xl:h-[48rem] xl:w-11 xl:flex-col">
       {showSettings && <SettingsDialog />}
+      {showRebus && <RebusDialog />}
       <div className="relative flex grow xl:grow-0">
         <button
           onClick={() => {
@@ -178,7 +212,9 @@ export const OptionButtons = (props: {
       </div>
       <div className="relative flex grow xl:grow-0">
         <button
-          onClick={() => {}}
+          onClick={() => {
+            setShowRebus(true);
+          }}
           className="group relative m-1 flex grow cursor-pointer flex-row justify-center rounded-lg bg-gray-800 p-2 text-gray-400 transition duration-150 hover:bg-red-700 hover:text-yellow-400 xl:grow-0"
         >
           <div className="flex h-full items-center">
